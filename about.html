@@ -46,19 +46,27 @@
   <ul class="values">
     <li class="value">
       <h3 class="value-title">Perseverance</h3>
-      <p>Write why this value matters to you and how it shows up in your work.</p>
+      <p>The steady effort to keep going and finish what you start, even when you face hard times, failure, or slow progress.</p>
     </li>
     <li class="value">
       <h3 class="value-title">Creativity</h3>
-      <p>Write why this value matters to you and how it shows up in your work.</p>
+      <p>It helps you solve problems better, protects your mental health, and builds a career advantage in a changing world.</p>
     </li>
     <li class="value">
       <h3 class="value-title">Discipline</h3>
-      <p>Write why this value matters to you and how it shows up in your work.</p>
+      <p>It helps you stay focused and committed to your goals, even when you don't feel like it.</p>
     </li>
     <li class="value">
       <h3 class="value-title">Teamwork</h3>
-      <p>Write why this value matters to you and how it shows up in your work.</p>
+      <p>It helps you collaborate effectively with others and achieve common goals.</p>
+    </li>
+    <li class="value">
+      <h3 class="value-title">Acceptance</h3>
+      <p>It helps you embrace different perspectives and adapt to new situations.</p>
+    </li>
+    <li class="value">
+      <h3 class="value-title">Freedom</h3>
+      <p>It allows you to make choices and express yourself authentically.</p>
     </li>
   </ul>
 </section>
@@ -66,22 +74,26 @@
         <section id="favorite-games" class="section">
           <h2 class="section-title">My Favorite Games</h2>
           <div class="tiles">
-            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
-                    data-description="Write why this is one of your favorite games.">
-              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 1</span>
-            </button>
-            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
-                    data-description="Write why this is one of your favorite games.">
-              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 2</span>
-            </button>
-            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
-                    data-description="Write why this is one of your favorite games.">
-              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 3</span>
-            </button>
-            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
-                    data-description="Write why this is one of your favorite games.">
-              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 4</span>
-            </button>
+            <button type="button" class="tile game" data-genre="Indie, Survival horror, Simulation, Role-playing (RPG), Open-ended Sandbox" data-platform="PC"
+        data-shots="assets/pz1.jpg, assets/pz2.jpg, assets/pz3.jpg"
+        data-description="I love this game because it's challenging and immersive, offering a unique survival experience.">
+  <img src="assets/pzlogo.png" alt=""><span class="tile-name">Project Zomboid</span>
+</button>
+<button type="button" class="tile game" data-genre="Indie, Sandbox, Creative" data-platform="PC, Console, Mobile"
+        data-shots="assets/mc1.jpg, assets/mc2.jpg, assets/mc3.jpg"
+        data-description="I love this game because it allows me to build and explore endless possibilities.">
+  <img src="assets/mclogo.png" alt=""><span class="tile-name">Minecraft</span>
+</button>
+<button type="button" class="tile game" data-genre="Indie, Rhythm, Music" data-platform="Mobile"
+        data-shots="assets/sl1.jpg, assets/sl2.jpg, assets/sl3.jpg"
+        data-description="I love this game because it's a unique blend of rhythm and music, offering a creative and engaging experience.">
+  <img src="assets/Sonoluslogo.png" alt=""><span class="tile-name">Sonolus</span>
+</button>
+<button type="button" class="tile game" data-genre="Strategy, Multiplayer Online Battle Arena (MOBA)" data-platform="Mobile"
+        data-shots="assets/ml1.jpg, assets/ml2.jpg, assets/ml3.jpg"
+        data-description="I love this game because it's a fast-paced team-based strategy game that requires coordination and skill.">
+  <img src="assets/mllogo.webp" alt=""><span class="tile-name">Mobile Legends</span>
+</button>
           </div>
         </section>
 
@@ -137,6 +149,7 @@
   <!-- Game preview (slides in from the right) -->
   <dialog class="drawer" id="gameDrawer" aria-labelledby="gdName">
     <button class="drawer-close" id="gdClose" aria-label="Close preview">&times;</button>
+    <div class="drawer-shots" id="gdShots" role="group" aria-label="Gameplay screenshots"></div>
     <div class="drawer-body">
       <img id="gdImage" src="" alt="">
       <h3 id="gdName"></h3>

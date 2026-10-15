@@ -7,6 +7,48 @@ const gdDesc = document.getElementById("gdDesc");
 
 let lastTile = null;
 
+// Gameplay shots (floating paper prints)
+const gdShots = document.getElementById("gdShots");
+const SHOT_TILT = 14;   // maximum tilt in degrees on hover
+
+function renderShots(tile, gameName) {
+  gdShots.replaceChildren();
+  const list = (tile.dataset.shots || "")
+    .split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
+
+  drawer.classList.toggle("has-shots", list.length > 0);
+
+  list.forEach((src, i) => {
+    const shot = document.createElement("div");
+    shot.className = "shot";
+    const paper = document.createElement("div");
+    paper.className = "shot-paper";
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = gameName + " gameplay " + (i + 1);
+    paper.appendChild(img);
+    shot.appendChild(paper);
+    gdShots.appendChild(shot);
+
+    if (!reduceMotion) {
+      paper.addEventListener("pointermove", (e) => {
+        if (e.pointerType !== "mouse") return;
+        const r = paper.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        paper.style.setProperty("--ry", x * 2 * SHOT_TILT + "deg");
+        paper.style.setProperty("--rx", -y * 2 * SHOT_TILT + "deg");
+        paper.style.setProperty("--gx", (x + 0.5) * 100 + "%");
+        paper.style.setProperty("--gy", (y + 0.5) * 100 + "%");
+      });
+      paper.addEventListener("pointerleave", () => {
+        paper.style.setProperty("--rx", "0deg");
+        paper.style.setProperty("--ry", "0deg");
+      });
+    }
+  });
+}
+
 function openGame(tile) {
   const img = tile.querySelector("img");
   lastTile = tile;
@@ -16,6 +58,7 @@ function openGame(tile) {
   gdGenre.textContent = tile.dataset.genre || "";
   gdPlatform.textContent = tile.dataset.platform || "";
   gdDesc.textContent = tile.dataset.description || "";
+  renderShots(tile, gdName.textContent);
 
   drawer.classList.remove("closing");
   drawer.showModal();
