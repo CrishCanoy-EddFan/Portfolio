@@ -1,2 +1,2 @@
-# Portfolio
-Zombie themed portfolio website
+# Portfolio-Crish-Canoy
+MSU-IIT portfolio

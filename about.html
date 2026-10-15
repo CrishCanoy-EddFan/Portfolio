@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Me | Crish F. Canoy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="grime" id="grime" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html" data-transition="back">Crish F. Canoy</a>
+    <nav aria-label="Main">
+      <a href="index.html" data-transition="back">Back to Home</a>
+      <a href="#values">My Values</a>
+      <a href="#favorite-games">My Favorite Games</a>
+      <a href="#sports">Sports</a>
+    </nav>
+    <div class="score-box" role="group" aria-label="Score">
+      <span>Score <b id="scoreValue">0</b></span>
+      <span>Best <b id="bestValue">0</b></span>
+      <button type="button" id="scoreReset" aria-label="Reset score">Reset</button>
+    </div>
+  </header>
+
+  <main class="tablet-stage" id="tabletWrap">
+  <div class="tablet">
+    <span class="tablet-camera"></span>
+    <div class="tablet-screen">
+      <div class="status-bar">
+        <span>No service</span>
+        <span id="tabletClock">12:00</span>
+        <span class="battery">9%</span>
+      </div>
+
+      <div class="tablet-content">
+
+      <!-- MY VALUES -->
+<section id="values" class="section">
+  <h2 class="section-title">My Values</h2>
+  <ul class="values">
+    <li class="value">
+      <h3 class="value-title">Perseverance</h3>
+      <p>Write why this value matters to you and how it shows up in your work.</p>
+    </li>
+    <li class="value">
+      <h3 class="value-title">Creativity</h3>
+      <p>Write why this value matters to you and how it shows up in your work.</p>
+    </li>
+    <li class="value">
+      <h3 class="value-title">Discipline</h3>
+      <p>Write why this value matters to you and how it shows up in your work.</p>
+    </li>
+    <li class="value">
+      <h3 class="value-title">Teamwork</h3>
+      <p>Write why this value matters to you and how it shows up in your work.</p>
+    </li>
+  </ul>
+</section>
+        <!-- MY FAVORITE GAMES -->
+        <section id="favorite-games" class="section">
+          <h2 class="section-title">My Favorite Games</h2>
+          <div class="tiles">
+            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
+                    data-description="Write why this is one of your favorite games.">
+              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 1</span>
+            </button>
+            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
+                    data-description="Write why this is one of your favorite games.">
+              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 2</span>
+            </button>
+            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
+                    data-description="Write why this is one of your favorite games.">
+              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 3</span>
+            </button>
+            <button type="button" class="tile game" data-genre="Genre" data-platform="PC"
+                    data-description="Write why this is one of your favorite games.">
+              <img src="assets/placeholder.svg" alt=""><span class="tile-name">Favorite Game 4</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- SPORTS -->
+        <section id="sports" class="section">
+          <h2 class="section-title">Sports</h2>
+          <div class="tiles">
+            <figure class="tile"><img src="assets/placeholder.svg" alt="Arnis"><figcaption class="tile-name">Arnis</figcaption></figure>
+            <figure class="tile"><img src="assets/placeholder.svg" alt="Badminton"><figcaption class="tile-name">Badminton</figcaption></figure>
+            <figure class="tile"><img src="assets/placeholder.svg" alt="Sport 3"><figcaption class="tile-name">Sport 3</figcaption></figure>
+            <figure class="tile"><img src="assets/placeholder.svg" alt="Sport 4"><figcaption class="tile-name">Sport 4</figcaption></figure>
+          </div>
+          <a class="btn" href="index.html" data-transition="back">Back to Home</a>
+        </section>
+      </div>
+
+      <div class="home-bar"></div>
+    </div>
+  </div>
+  </main>
+  <footer class="footer">Stay safe out there.</footer>
+
+  <!-- Effects (same as the home page) -->
+  <canvas class="rain" id="rainCanvas" aria-hidden="true"></canvas>
+  <div class="zombie-layer" id="zombieLayer" aria-hidden="true" hidden></div>
+  <div class="scope" id="scope" aria-hidden="true" hidden>
+    <svg viewBox="0 0 60 60" width="60" height="60">
+      <circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M30 2v18M30 40v18M2 30h18M40 30h18" stroke="currentColor" stroke-width="2"/>
+      <circle cx="30" cy="30" r="2" fill="#c0392b"/>
+    </svg>
+  </div>
+  <div class="muzzle-flash" id="muzzleFlash" aria-hidden="true"></div>
+  <div class="light-overlay" id="lightOverlay" aria-hidden="true"></div>
+  <div class="bulb" id="bulb" aria-hidden="true">
+    <span class="cord"></span><span class="cap"></span><span class="glass"></span>
+  </div>
+
+  <div class="effects-panel" role="group" aria-label="Effects">
+    <button type="button" data-effect="rain" aria-pressed="true">Rain: On</button>
+    <button type="button" data-effect="light" aria-pressed="true">Light: On</button>
+    <button type="button" data-effect="grime" aria-pressed="true">Grime: On</button>
+    <button type="button" data-effect="scope" aria-pressed="true">Scope: On</button>
+    <button type="button" data-effect="zombies" aria-pressed="true">Zombies: On</button>
+  </div>
+
+  <audio id="bgMusic" src="assets/Main Theme.mp3" loop preload="none"></audio>
+  <div class="music-player">
+    <button id="musicToggle" type="button" aria-pressed="false">Music: Off</button>
+    <input type="range" id="musicVolume" min="0" max="100" value="40" aria-label="Music volume">
+  </div>
+
+  <!-- Game preview (slides in from the right) -->
+  <dialog class="drawer" id="gameDrawer" aria-labelledby="gdName">
+    <button class="drawer-close" id="gdClose" aria-label="Close preview">&times;</button>
+    <div class="drawer-body">
+      <img id="gdImage" src="" alt="">
+      <h3 id="gdName"></h3>
+      <dl class="file-info">
+        <div><dt>Genre</dt><dd id="gdGenre"></dd></div>
+        <div><dt>Platform</dt><dd id="gdPlatform"></dd></div>
+      </dl>
+      <p id="gdDesc"></p>
+    </div>
+  </dialog>
+
+  <script src="script.js"></script>
+  <script src="about.js"></script>
+</body>
+</html>
