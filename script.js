@@ -3,14 +3,14 @@
 // Each skill cycles through its "frames" in order, then loops.
 // ---------------------------------------------------------------
 const SKILL_IMAGES = {
-  "game-developer": { title: "Game Developer", frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "artist":         { title: "Artist",         frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "arnis":          { title: "Arnis",          frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "badminton":      { title: "Badminton",      frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "graphic-designer": { title: "Graphic Designer", frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "video-editing": { title: "Video Editing", frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "basketball": { title: "Basketball", frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] },
-  "volleyball": { title: "Volleyball", frames: ["assets/placeholder.svg", "assets/placeholder.svg", "assets/placeholder.svg"] }
+  "game-developer": { title: "Game Developer", frames: ["assets/game developer.webp"] },
+  "artist":         { title: "Artist",         frames: ["assets/artist.jpg"] },
+  "arnis":          { title: "Arnis",          frames: ["assets/arnis.jpg"] },
+  "badminton":      { title: "Badminton",      frames: ["assets/badminton.webp"] },
+  "graphic-designer": { title: "Graphic Designer", frames: ["assets/graphic designer.jpg"] },
+  "video-editing": { title: "Video Editing", frames: ["assets/video editor.jpg"] },
+  "basketball": { title: "Basketball", frames: ["assets/basketball.jpg"] },
+  "volleyball": { title: "Volleyball", frames: ["assets/volleyball.jpg"] }
 };
 
 const FRAME_DELAY = 700; // milliseconds between frames
