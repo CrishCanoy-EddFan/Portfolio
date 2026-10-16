@@ -17,6 +17,7 @@
     <a class="brand" href="index.html" data-transition="back">Crish F. Canoy</a>
     <nav aria-label="Main">
       <a href="index.html" data-transition="back">Back to Home</a>
+      <a href="#zodiac">Zodiac Sign</a>
       <a href="#values">My Values</a>
       <a href="#favorite-games">My Favorite Games</a>
       <a href="#sports">Sports</a>
@@ -39,6 +40,64 @@
       </div>
 
       <div class="tablet-content">
+
+<!-- ZODIAC SIGN -->
+<section id="zodiac" class="section">
+  <h2 class="section-title">Zodiac Sign</h2>
+  <div class="zodiac">
+
+    <!-- Hologram (left) -->
+    <div class="holo" role="img" aria-label="Hologram of the Virgo zodiac symbol">
+      <div class="holo-stage">
+        <svg class="holo-ring ring-outer" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="96" class="solid"/>
+          <circle cx="100" cy="100" r="90" class="ticks"/>
+          <circle cx="100" cy="6" r="3.5" class="node"/>
+          <circle cx="194" cy="100" r="2.5" class="node"/>
+          <circle cx="40" cy="182" r="2.5" class="node"/>
+        </svg>
+        <svg class="holo-ring ring-inner" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="78" class="arcs"/>
+        </svg>
+        <svg class="holo-glyph" viewBox="109 0 1617 1865" aria-hidden="true">
+          <g transform="translate(0 1496) scale(1 -1)"><path d="M680 1496Q743 1496 802 1397Q862 1298 862 1170Q902 1289 1001 1392Q1100 1496 1175 1496Q1237 1496 1278 1412Q1319 1329 1319 1110V908Q1367 1033 1432 1092Q1498 1152 1566 1152Q1626 1152 1676 1036Q1726 920 1726 647Q1726 239 1345 -82Q1346 -176 1492 -369H1324Q1278 -328 1204 -167Q1037 -268 862 -275V-159Q1053 -131 1177 -44L1168 173V1028Q1168 1046 1168 1063Q1168 1344 1122 1345Q1064 1344 998 1236Q931 1127 868 927V0H717V922Q717 1243 702 1296Q686 1349 651 1349Q651 1349 650 1349Q650 1349 649 1349Q608 1349 518 1236Q429 1123 410 908V0H261V1089Q261 1279 109 1470H251Q369 1391 405 1215Q428 1308 520 1402Q611 1496 680 1496ZM1319 618V58Q1577 308 1601 646Q1601 839 1578 908Q1556 978 1528 978Q1528 978 1524 978Q1494 978 1422 875Q1351 772 1319 618Z"/></g>
+        </svg>
+        <div class="holo-scan" aria-hidden="true"></div>
+      </div>
+      <div class="holo-beam" aria-hidden="true"></div>
+      <div class="holo-halo" aria-hidden="true"></div>
+      <div class="holo-base" aria-hidden="true"></div>
+      <span class="holo-dot" style="--x: 38%; --d: 0s"></span>
+      <span class="holo-dot" style="--x: 46%; --d: 1.1s"></span>
+      <span class="holo-dot" style="--x: 53%; --d: 2.2s"></span>
+      <span class="holo-dot" style="--x: 60%; --d: 0.6s"></span>
+      <span class="holo-dot" style="--x: 42%; --d: 1.8s"></span>
+      <span class="holo-dot" style="--x: 57%; --d: 2.8s"></span>
+    </div>
+
+    <!-- Details (right) -->
+    <div class="zodiac-info">
+      <p class="zodiac-kicker">Zodiac sign</p>
+      <h3 class="zodiac-name">Virgo</h3>
+      <p class="zodiac-sub">The Maiden</p>
+      <dl class="zodiac-facts">
+        <div><dt>Dates</dt><dd>Aug 23 &ndash; Sep 22</dd></div>
+        <div><dt>Element</dt><dd>Earth</dd></div>
+        <div><dt>Modality</dt><dd>Mutable</dd></div>
+        <div><dt>Ruling planet</dt><dd>Mercury</dd></div>
+        <div><dt>Compatible</dt><dd>Taurus, Capricorn</dd></div>
+      </dl>
+      <ul class="zodiac-traits">
+        <li>Analytical</li>
+        <li>Practical</li>
+        <li>Hardworking</li>
+        <li>Detail-oriented</li>
+      </ul>
+      <p class="zodiac-desc">Virgo is an earth sign known for being careful and hardworking, practical, and detail-oriented, with a natural drive for perfection and a strong desire to be helpful to others.</p>
+    </div>
+
+  </div>
+</section>
 
       <!-- MY VALUES -->
 <section id="values" class="section">
@@ -140,16 +199,21 @@
     <button type="button" data-effect="zombies" aria-pressed="true">Zombies: On</button>
   </div>
 
-  <audio id="bgMusic" src="assets/Main Theme.mp3" loop preload="none"></audio>
+  <audio id="bgMusic" src="assets/MainTheme.mp3" loop preload="none"></audio>
   <div class="music-player">
     <button id="musicToggle" type="button" aria-pressed="false">Music: Off</button>
     <input type="range" id="musicVolume" min="0" max="100" value="40" aria-label="Music volume">
   </div>
 
-  <!-- Game preview (slides in from the right) -->
-  <dialog class="drawer" id="gameDrawer" aria-labelledby="gdName">
-    <button class="drawer-close" id="gdClose" aria-label="Close preview">&times;</button>
-    <div class="drawer-shots" id="gdShots" role="group" aria-label="Gameplay screenshots"></div>
+  <!-- Game preview: pictures float on the left, info panel on the right -->
+<dialog class="drawer" id="gameDrawer" aria-labelledby="gdName">
+  <button class="drawer-close" id="gdClose" aria-label="Close preview">&times;</button>
+
+  <!-- the 3 gameplay pictures float here, in the free space on the left -->
+  <div class="gallery" id="gdGallery" role="group" aria-label="Gameplay screenshots"></div>
+
+  <!-- game info on the right -->
+  <div class="drawer-panel">
     <div class="drawer-body">
       <img id="gdImage" src="" alt="">
       <h3 id="gdName"></h3>
@@ -159,7 +223,8 @@
       </dl>
       <p id="gdDesc"></p>
     </div>
-  </dialog>
+  </div>
+</dialog>
 
   <script src="script.js"></script>
   <script src="about.js"></script>

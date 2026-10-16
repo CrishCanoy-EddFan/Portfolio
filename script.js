@@ -105,13 +105,22 @@ if (lightbox) {
   const lbHint = document.getElementById("lbHint");
   const lbClose = document.getElementById("lbClose");
 
+  const CHEVRON_L = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  const CHEVRON_R = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+
   let lastCard = null;
+  let kind = "art";
   let rotX = 0, rotY = 0;
-  let dragging = false, dragX = 0, dragY = 0;
+  let dragging = false, moved = false, dragX = 0, dragY = 0;
+  let slides = [], slideIndex = 0;
 
   function applyRot() {
     lbItem.style.setProperty("--rx", rotX + "deg");
     lbItem.style.setProperty("--ry", rotY + "deg");
+  }
+
+  function splitList(text) {
+    return (text || "").split(",").map((s) => s.trim()).filter(Boolean);
   }
 
   // Turns a normal Google Drive share link into an embeddable player link
@@ -120,40 +129,111 @@ if (lightbox) {
     return drive ? "https://drive.google.com/file/d/" + drive[1] + "/preview" : url;
   }
 
-  function makeMedia(card, title) {
-    const video = (card.dataset.video || "").trim();
-    if (video) {
-      if (/\.(mp4|webm|ogv)(\?.*)?$/i.test(video)) {          // a video file in assets/
-        const v = document.createElement("video");
-        v.src = video; v.controls = true; v.playsInline = true; v.preload = "metadata";
-        return { el: v, isVideo: true };
-      }
-      const f = document.createElement("iframe");              // Drive link
-      f.src = embedUrl(video);
-      f.title = title;
-      f.allow = "autoplay; fullscreen; picture-in-picture";
-      f.allowFullscreen = true;
-      return { el: f, isVideo: true };
-    }
+  // ----- ART: the picture on a sheet of paper -----
+  function buildArt(card) {
     const src = card.querySelector("img");
     const img = document.createElement("img");
     img.src = src.src; img.alt = src.alt; img.draggable = false;
-    return { el: img, isVideo: false };
+    lbFront.replaceChildren(img);
+  }
+
+  // ----- GAMES: landscape phone with next / previous buttons -----
+  function showSlide(i) {
+    if (!slides.length) return;
+    slideIndex = (i + slides.length) % slides.length;
+    slides.forEach((img, n) => img.classList.toggle("active", n === slideIndex));
+    lbFront.querySelectorAll(".phone-dots i").forEach((d, n) => d.classList.toggle("on", n === slideIndex));
+  }
+
+  function buildGame(card, title) {
+    const list = splitList(card.dataset.images);
+    if (!list.length) list.push(card.querySelector("img").src);
+
+    const phone = document.createElement("div");
+    phone.className = "phone" + (list.length < 2 ? " single" : "");
+    phone.innerHTML =
+      '<span class="phone-side phone-side-a" aria-hidden="true"></span>' +
+      '<span class="phone-side phone-side-b" aria-hidden="true"></span>' +
+      '<div class="phone-screen">' +
+        '<button type="button" class="phone-nav prev" aria-label="Previous image">' + CHEVRON_L + '</button>' +
+        '<button type="button" class="phone-nav next" aria-label="Next image">' + CHEVRON_R + '</button>' +
+        '<div class="phone-dots" aria-hidden="true"></div>' +
+      '</div>';
+
+    const screen = phone.querySelector(".phone-screen");
+    const dots = phone.querySelector(".phone-dots");
+    slides = list.map((src, i) => {
+      const img = document.createElement("img");
+      img.className = "slide"; img.src = src; img.draggable = false;
+      img.alt = title + " gameplay " + (i + 1);
+      dots.appendChild(document.createElement("i"));
+      return img;
+    });
+    screen.prepend(...slides);
+
+    phone.querySelector(".prev").addEventListener("click", () => showSlide(slideIndex - 1));
+    phone.querySelector(".next").addEventListener("click", () => showSlide(slideIndex + 1));
+
+    lbFront.replaceChildren(phone);
+    showSlide(0);
+  }
+
+  // ----- FILMS: video inside a TV (no floating) -----
+  function buildFilm(card, title) {
+    const video = (card.dataset.video || "").trim();
+    let media;
+    if (!video) {                                              // no video yet: show the poster
+      const src = card.querySelector("img");
+      media = document.createElement("img");
+      media.src = src.src; media.alt = src.alt;
+    } else if (/\.(mp4|webm|ogv)(\?.*)?$/i.test(video)) {      // a video file in assets/
+      media = document.createElement("video");
+      media.src = video; media.controls = true; media.playsInline = true; media.preload = "metadata";
+    } else {                                                   // Google Drive link
+      media = document.createElement("iframe");
+      media.src = embedUrl(video);
+      media.title = title;
+      media.allow = "autoplay; fullscreen; picture-in-picture";
+      media.allowFullscreen = true;
+    }
+
+    const tv = document.createElement("div");
+    tv.className = "tv";
+    tv.innerHTML =
+      '<div class="tv-ant" aria-hidden="true"></div>' +
+      '<div class="tv-body">' +
+        '<div class="tv-screen"><span class="tv-glass" aria-hidden="true"></span></div>' +
+        '<div class="tv-panel" aria-hidden="true">' +
+          '<span class="tv-knob"></span><span class="tv-knob"></span>' +
+          '<span class="tv-speaker"></span><span class="tv-led"></span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="tv-feet" aria-hidden="true"></div>';
+    tv.querySelector(".tv-screen").prepend(media);
+    lbFront.replaceChildren(tv);
   }
 
   function openProject(card) {
     lastCard = card;
     const title = card.querySelector("figcaption").textContent;
-    const media = makeMedia(card, title);
+    const type = (card.dataset.type || "").toLowerCase();
+    kind = (type === "game" || type === "film") ? type : "art";
+    lightbox.dataset.kind = kind;
 
-    lbFront.replaceChildren(media.el);
+    slides = []; slideIndex = 0;
+    if (kind === "game") buildGame(card, title);
+    else if (kind === "film") buildFilm(card, title);
+    else buildArt(card);
+
     lbBack.textContent = title;
     lbTitle.textContent = title;
     lbType.textContent = card.dataset.type || "";
     lbDesc.textContent = card.dataset.description || "";
-    lbHint.textContent = media.isVideo ? "Press Esc to close" : "Drag or use \u2190 \u2192 to rotate  \u00B7  Esc to close";
+    lbHint.textContent =
+      kind === "film" ? "Press Esc to close" :
+      kind === "game" ? "Use \u2039 \u203A to change the picture  \u00B7  Drag to rotate  \u00B7  Esc to close" :
+                        "Drag or use \u2190 \u2192 to rotate  \u00B7  Esc to close";
 
-    lightbox.classList.toggle("is-video", media.isVideo);
     rotX = 0; rotY = 0; applyRot();
 
     lightbox.showModal();
@@ -170,34 +250,42 @@ if (lightbox) {
     });
   });
 
-  // Drag to rotate the item
+  // Drag to rotate (art and games). Buttons inside the phone still work normally.
   lbItem.addEventListener("pointerdown", (e) => {
-    if (lightbox.classList.contains("is-video") || e.button !== 0) return;
-    dragging = true; dragX = e.clientX; dragY = e.clientY;
+    if (kind === "film" || e.button !== 0 || e.target.closest("button")) return;
+    dragging = true; moved = false; dragX = e.clientX; dragY = e.clientY;
     lbItem.setPointerCapture(e.pointerId);
     lbItem.classList.add("dragging");
   });
   lbItem.addEventListener("pointermove", (e) => {
     if (!dragging) return;
+    moved = true;
     rotY += (e.clientX - dragX) * 0.6;
     rotX = Math.max(-40, Math.min(40, rotX - (e.clientY - dragY) * 0.4));
     dragX = e.clientX; dragY = e.clientY;
     applyRot();
   });
-  function endDrag() { dragging = false; lbItem.classList.remove("dragging"); }
+  function endDrag() {
+    dragging = false;
+    lbItem.classList.remove("dragging");
+    setTimeout(() => { moved = false; }, 0);
+  }
   lbItem.addEventListener("pointerup", endDrag);
   lbItem.addEventListener("pointercancel", endDrag);
 
-  // Arrow keys also rotate it
+  // Arrow keys: next / previous picture on games, rotate on art
   lightbox.addEventListener("keydown", (e) => {
-    if (lightbox.classList.contains("is-video")) return;
-    if (e.key === "ArrowLeft")  { rotY -= 20; applyRot(); }
-    if (e.key === "ArrowRight") { rotY += 20; applyRot(); }
+    if (kind === "film") return;
+    const dir = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!dir) return;
+    if (kind === "game") showSlide(slideIndex + dir);
+    else { rotY += dir * 20; applyRot(); }
   });
 
   // Close: X button, click on the empty area around the item, or Esc
   lbClose.addEventListener("click", () => lightbox.close());
   lbStage.addEventListener("click", (e) => {
+    if (moved) return;
     if (!e.target.closest("#lbItem")) lightbox.close();
   });
   lightbox.addEventListener("close", () => {
