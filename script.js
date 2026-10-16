@@ -90,54 +90,123 @@ document.getElementById("skillList")?.addEventListener("focusout", (e) => {
 });
 
 // ---------------------------------------------------------------
-// Project preview window
+// Project preview (item-inspect screen)
 // ---------------------------------------------------------------
 const lightbox = document.getElementById("lightbox");
-const lbImage = document.getElementById("lbImage");
-const lbTitle = document.getElementById("lbTitle");
-const lbType = document.getElementById("lbType");
-const lbDesc = document.getElementById("lbDesc");
-const lbClose = document.getElementById("lbClose");
 
-let lastCard = null;
+if (lightbox) {
+  const lbStage = document.getElementById("lbStage");
+  const lbItem = document.getElementById("lbItem");
+  const lbFront = document.getElementById("lbFront");
+  const lbBack = document.getElementById("lbBack");
+  const lbTitle = document.getElementById("lbTitle");
+  const lbType = document.getElementById("lbType");
+  const lbDesc = document.getElementById("lbDesc");
+  const lbHint = document.getElementById("lbHint");
+  const lbClose = document.getElementById("lbClose");
 
-function openProject(card) {
-  const img = card.querySelector("img");
-  lastCard = card;
+  let lastCard = null;
+  let rotX = 0, rotY = 0;
+  let dragging = false, dragX = 0, dragY = 0;
 
-  lbImage.src = img.src;
-  lbImage.alt = img.alt;
-  lbTitle.textContent = card.querySelector("figcaption").textContent;
-  lbType.textContent = card.dataset.type || "";
-  lbDesc.textContent = card.dataset.description || "";
+  function applyRot() {
+    lbItem.style.setProperty("--rx", rotX + "deg");
+    lbItem.style.setProperty("--ry", rotY + "deg");
+  }
 
-  lightbox.showModal();
-  document.body.classList.add("no-scroll");
+  // Turns a normal Google Drive share link into an embeddable player link
+  function embedUrl(url) {
+    const drive = url.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
+    return drive ? "https://drive.google.com/file/d/" + drive[1] + "/preview" : url;
+  }
+
+  function makeMedia(card, title) {
+    const video = (card.dataset.video || "").trim();
+    if (video) {
+      if (/\.(mp4|webm|ogv)(\?.*)?$/i.test(video)) {          // a video file in assets/
+        const v = document.createElement("video");
+        v.src = video; v.controls = true; v.playsInline = true; v.preload = "metadata";
+        return { el: v, isVideo: true };
+      }
+      const f = document.createElement("iframe");              // Drive link
+      f.src = embedUrl(video);
+      f.title = title;
+      f.allow = "autoplay; fullscreen; picture-in-picture";
+      f.allowFullscreen = true;
+      return { el: f, isVideo: true };
+    }
+    const src = card.querySelector("img");
+    const img = document.createElement("img");
+    img.src = src.src; img.alt = src.alt; img.draggable = false;
+    return { el: img, isVideo: false };
+  }
+
+  function openProject(card) {
+    lastCard = card;
+    const title = card.querySelector("figcaption").textContent;
+    const media = makeMedia(card, title);
+
+    lbFront.replaceChildren(media.el);
+    lbBack.textContent = title;
+    lbTitle.textContent = title;
+    lbType.textContent = card.dataset.type || "";
+    lbDesc.textContent = card.dataset.description || "";
+    lbHint.textContent = media.isVideo ? "Press Esc to close" : "Drag or use \u2190 \u2192 to rotate  \u00B7  Esc to close";
+
+    lightbox.classList.toggle("is-video", media.isVideo);
+    rotX = 0; rotY = 0; applyRot();
+
+    lightbox.showModal();
+    document.body.classList.add("no-scroll");
+  }
+
+  document.querySelectorAll(".card").forEach((card) => {
+    card.addEventListener("click", () => openProject(card));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openProject(card);
+      }
+    });
+  });
+
+  // Drag to rotate the item
+  lbItem.addEventListener("pointerdown", (e) => {
+    if (lightbox.classList.contains("is-video") || e.button !== 0) return;
+    dragging = true; dragX = e.clientX; dragY = e.clientY;
+    lbItem.setPointerCapture(e.pointerId);
+    lbItem.classList.add("dragging");
+  });
+  lbItem.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    rotY += (e.clientX - dragX) * 0.6;
+    rotX = Math.max(-40, Math.min(40, rotX - (e.clientY - dragY) * 0.4));
+    dragX = e.clientX; dragY = e.clientY;
+    applyRot();
+  });
+  function endDrag() { dragging = false; lbItem.classList.remove("dragging"); }
+  lbItem.addEventListener("pointerup", endDrag);
+  lbItem.addEventListener("pointercancel", endDrag);
+
+  // Arrow keys also rotate it
+  lightbox.addEventListener("keydown", (e) => {
+    if (lightbox.classList.contains("is-video")) return;
+    if (e.key === "ArrowLeft")  { rotY -= 20; applyRot(); }
+    if (e.key === "ArrowRight") { rotY += 20; applyRot(); }
+  });
+
+  // Close: X button, click on the empty area around the item, or Esc
+  lbClose.addEventListener("click", () => lightbox.close());
+  lbStage.addEventListener("click", (e) => {
+    if (!e.target.closest("#lbItem")) lightbox.close();
+  });
+  lightbox.addEventListener("close", () => {
+    lbFront.replaceChildren();                 // removes the player, so the video stops
+    document.body.classList.remove("no-scroll");
+    if (lastCard) lastCard.focus();
+  });
 }
 
-document.querySelectorAll(".card").forEach((card) => {
-  card.addEventListener("click", () => openProject(card));
-  card.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      openProject(card);
-    }
-  });
-});
-
-// Close with the X button
-lbClose?.addEventListener("click", () => lightbox.close());
-
-// Close when clicking the dark area outside the window
-lightbox?.addEventListener("click", (e) => {
-  if (e.target === lightbox) lightbox.close();
-});
-
-// Runs for every way of closing (X, outside click, Esc key)
-lightbox?.addEventListener("close", () => {
-  document.body.classList.remove("no-scroll");
-  if (lastCard) lastCard.focus();
-});
 
 // ---------------------------------------------------------------
 // Background music
